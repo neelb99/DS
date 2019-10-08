@@ -66,17 +66,25 @@ int search(node *root, char *a, char *result) {
   
 int main() 
 { 
+	FILE *fp;
 	int ch,t;
 	char name[50],number[10];
 	node *root = getNode();
+	fp = fopen("phonebook.txt","a+");
+	while(feof(fp)==0){
+		fscanf(fp,"%s",name);
+		fscanf(fp,"%s",number);
+		insert(root,name,number);
+	}
 	while(1){
 		printf("\nWelcome to trie phonebook!");
 		printf("\n1:Enter new contact");
 		printf("\n2:Search contact");
-		printf("\n3:Exit");
+		printf("\n3:Display phonebook");
+		printf("\n4:Exit");
 		printf("\nEnter Choice: ");
 		scanf("%d",&ch);
-		if(ch==3)
+		if(ch==4)
 			break;
 		switch(ch){
 			case 1:
@@ -89,6 +97,7 @@ int main()
 					break;
 				}
 				insert(root,name,number);
+				fprintf(fp,"\n%s %s",name,number);
 				printf("\n%s - %s Added to phonebook\n",name,number);
 				break;
 			case 2:
@@ -100,9 +109,19 @@ int main()
 				else
 					printf("\n%s - %s\n",name,number);
 				break;
+			case 3:
+				rewind(fp);
+				while(feof(fp)==0){
+					fscanf(fp,"%s",name);
+					fscanf(fp,"%s",number);
+					printf("\n%s - %s",name,number);
+				}
+				printf("\n");
+				break;
 			default:
 				printf("\nInvalid Choice!\n");
 		}
 	}
+	fclose(fp);
     return 0; 
 } 
